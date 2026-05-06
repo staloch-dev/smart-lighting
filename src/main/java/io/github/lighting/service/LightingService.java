@@ -33,10 +33,12 @@ public class LightingService {
         Lighting lighting = getState();
         lighting.setLuminosity(request.luminosity());
 
-        if (!lighting.getSwitchOn()) {
-            lighting.setLedOn(false);
-        } else if (lighting.getMode() == Mode.AUTOMATIC) {
-            lighting.setLedOn(request.luminosity() < lighting.getThreshold());
+        if (lighting.getMode() == Mode.AUTOMATIC) {
+            if (!lighting.getSwitchOn()) {
+                lighting.setLedOn(false);
+            } else {
+                lighting.setLedOn(request.luminosity() < lighting.getThreshold());
+            }
         }
 
         return mapper.toResponse(repository.save(lighting));
@@ -48,6 +50,8 @@ public class LightingService {
 
         if (request.mode() == Mode.AUTOMATIC) {
             lighting.setLedOn(false);
+        } else {
+            lighting.setLedOn(lighting.getSwitchOn());
         }
 
         return mapper.toResponse(repository.save(lighting));
@@ -63,8 +67,14 @@ public class LightingService {
         Lighting lighting = getState();
         lighting.setSwitchOn(request.switchOn());
 
-        if (!request.switchOn()) {
-            lighting.setLedOn(false);
+        lighting.setSwitchOn(request.switchOn());
+
+        if (lighting.getMode() == Mode.MANUAL) {
+            lighting.setLedOn(request.switchOn());
+        } else {
+            if (!request.switchOn()) {
+                lighting.setLedOn(false);
+            }
         }
 
         return mapper.toResponse(repository.save(lighting));
