@@ -1,9 +1,9 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const int LDR_PIN = 34;
-const int LED_PIN = 5;
-const int BTN_PIN = 15;
+const int LDR_PIN = 27;
+const int LED_PIN = 12;
+const int SWT_PIN = 14;
 
 const char* ssid     = "Wokwi-GUEST";
 const char* password = "";
@@ -17,7 +17,7 @@ bool lastSwitchState = false;
 void setup() {
   Serial.begin(115200);
   pinMode(LED_PIN, OUTPUT);
-  pinMode(BTN_PIN, INPUT_PULLUP);
+  pinMode(SWT_PIN, INPUT_PULLUP);
   digitalWrite(LED_PIN, LOW);
 
   WiFi.begin(ssid, password);
